@@ -31,13 +31,13 @@ ActiveRecord::Base.class_eval do
         order = args.last.delete(:order)
         if conditions || order
           args.insert(1, (->{
-            scope = nil
+            scope = spawn
             scope = where(conditions) if conditions
-            scope = scope ? scope.order(order) : order(order)
+            scope = scope.order(order)
           }))
         end
-        args
       end
+      args
     end
 
     alias_method_chain :has_many, :rails3
