@@ -27,6 +27,11 @@ if rails4?
         has_many_without_rails3(*convert_options_to_proc(args))
       end
 
+      def has_one_with_rails3(*args)
+        has_one_without_rails3(*convert_options_to_proc(args))
+      end
+
+      private
 
       def convert_options_to_proc(args)
         if args.last.is_a? Hash
@@ -46,6 +51,7 @@ if rails4?
       end
 
       alias_method_chain :has_many, :rails3
+      alias_method_chain :has_one, :rails3
 
     end
 

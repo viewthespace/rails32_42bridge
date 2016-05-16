@@ -30,5 +30,13 @@ RSpec.describe Post, type: :model do
     expect(post.users.count).to be 1
   end
 
+  specify 'post has a latest comment' do
+    post = Post.create(value: "My first post")
+    post.comments.create(value: "Thats a silly thing to post", position: 2, latest: false)
+    expect(post.latest_comment).to be_nil
+    comment = post.comments.create(value: "Thats a silly thing to post", position: 2, latest: true)
+    expect(post.reload.latest_comment).to eq comment
+  end
+
 
 end
