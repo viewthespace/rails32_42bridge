@@ -21,15 +21,16 @@ ActiveRecord::Base.class_eval do
   class << self
 
     def has_many_with_rails3(*args)
-      has_many_without_rails3(*delete_invalid_rails4_options(args))
+      has_many_without_rails3(*convert_options_to_proc(args))
     end
 
 
-    def delete_invalid_rails4_options(args)
+    def convert_options_to_proc(args)
       if args.last.is_a? Hash
-        args.last.delete(:conditions)
-        args.last.delete(:uniq)
-        args.last.delete(:order)
+        conditions = args.last.delete(:conditions)
+        if conditions
+          args.insert(1, ->{ where(conditions) })
+        end
       end
       args
     end
