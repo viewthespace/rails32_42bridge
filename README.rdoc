@@ -1,0 +1,3 @@
+= Rails3242bridge
+
+This project rocks and uses MIT-LICENSE.
