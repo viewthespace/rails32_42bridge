@@ -29,10 +29,12 @@ ActiveRecord::Base.class_eval do
       if args.last.is_a? Hash
         conditions = args.last.delete(:conditions)
         order = args.last.delete(:order)
-        if conditions || order
+        unique = args.last.delete(:uniq)
+        if conditions || order || uniq
           args.insert(1, (->{
             scope = spawn
             scope = where(conditions) if conditions
+            scope = scope.uniq if unique
             scope = scope.order(order)
           }))
         end
