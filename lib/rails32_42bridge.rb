@@ -28,8 +28,13 @@ ActiveRecord::Base.class_eval do
     def convert_options_to_proc(args)
       if args.last.is_a? Hash
         conditions = args.last.delete(:conditions)
-        if conditions
+        order = args.last.delete(:order)
+        if conditions && order
+          args.insert(1, ->{ where(conditions).order(order) })
+        elsif conditions
           args.insert(1, ->{ where(conditions) })
+        elsif order
+          args.insert(1, ->{ order(order) })
         end
       end
       args

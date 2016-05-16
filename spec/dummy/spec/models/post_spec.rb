@@ -15,4 +15,11 @@ RSpec.describe Post, type: :model do
     comment.save!
     expect(post.reload.comments).to be_empty
   end
+
+  specify 'ordering comments within a post' do
+    post = Post.create(value: "My first post")
+    comment2 = post.comments.create(value: "Thats a silly thing to post", position: 2)
+    comment1 = post.comments.create(value: "Thats a silly thing to post", position: 1)
+    expect(post.comments.to_a).to eq([comment1, comment2])
+  end
 end
