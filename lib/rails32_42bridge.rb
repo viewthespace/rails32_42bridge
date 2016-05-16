@@ -29,15 +29,15 @@ ActiveRecord::Base.class_eval do
       if args.last.is_a? Hash
         conditions = args.last.delete(:conditions)
         order = args.last.delete(:order)
-        if conditions && order
-          args.insert(1, ->{ where(conditions).order(order) })
-        elsif conditions
-          args.insert(1, ->{ where(conditions) })
-        elsif order
-          args.insert(1, ->{ order(order) })
+        if conditions || order
+          args.insert(1, (->{
+            scope = nil
+            scope = where(conditions) if conditions
+            scope = scope ? scope.order(order) : order(order)
+          }))
         end
+        args
       end
-      args
     end
 
     alias_method_chain :has_many, :rails3
