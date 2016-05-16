@@ -16,39 +16,42 @@ module Rails3242bridge
 
 end
 
-ActiveRecord::Base.class_eval do
+include Rails3242bridge::VersionCheck
 
-  class << self
+if rails4?
+  ActiveRecord::Base.class_eval do
 
-    def has_many_with_rails3(*args)
-      has_many_without_rails3(*convert_options_to_proc(args))
-    end
+    class << self
 
-
-    def convert_options_to_proc(args)
-      if args.last.is_a? Hash
-        conditions = args.last.delete(:conditions)
-        order = args.last.delete(:order)
-        unique = args.last.delete(:uniq)
-        if conditions || order || uniq
-          args.insert(1, (->{
-            scope = spawn
-            scope = where(conditions) if conditions
-            scope = scope.uniq if unique
-            scope = scope.order(order)
-          }))
-        end
+      def has_many_with_rails3(*args)
+        has_many_without_rails3(*convert_options_to_proc(args))
       end
-      args
+
+
+      def convert_options_to_proc(args)
+        if args.last.is_a? Hash
+          conditions = args.last.delete(:conditions)
+          order = args.last.delete(:order)
+          unique = args.last.delete(:uniq)
+          if conditions || order || uniq
+            args.insert(1, (->{
+              scope = spawn
+              scope = where(conditions) if conditions
+              scope = scope.uniq if unique
+              scope = scope.order(order)
+            }))
+          end
+        end
+        args
+      end
+
+      alias_method_chain :has_many, :rails3
+
     end
 
-    alias_method_chain :has_many, :rails3
 
   end
 
-
 end
 
-
-include Rails3242bridge::VersionCheck
 
