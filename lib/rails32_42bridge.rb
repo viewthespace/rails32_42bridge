@@ -31,6 +31,10 @@ if rails4?
         has_one_without_rails3(*convert_options_to_proc(args))
       end
 
+      def belongs_to_with_rails3(*args)
+        belongs_to_without_rails3(*convert_options_to_proc(args))
+      end
+
       private
 
       def convert_options_to_proc(args)
@@ -38,7 +42,7 @@ if rails4?
           conditions = args.last.delete(:conditions)
           order = args.last.delete(:order)
           unique = args.last.delete(:uniq)
-          if conditions || order || uniq
+          if conditions || order || unique
             args.insert(1, (->{
               scope = spawn
               scope = where(conditions) if conditions
@@ -52,6 +56,7 @@ if rails4?
 
       alias_method_chain :has_many, :rails3
       alias_method_chain :has_one, :rails3
+      alias_method_chain :belongs_to, :rails3
 
     end
 
