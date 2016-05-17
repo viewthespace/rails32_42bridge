@@ -38,10 +38,12 @@ if rails4?
       private
 
       def convert_options_to_proc(args)
-        if args.last.is_a? Hash
-          conditions = args.last.delete(:conditions)
-          order = args.last.delete(:order)
-          unique = args.last.delete(:uniq)
+
+        if args[1] && args[1].is_a?(Hash)
+          options = args[1]
+          conditions = options.delete(:conditions)
+          order = options.delete(:order)
+          unique = options.delete(:uniq)
           if conditions || order || unique
             args.insert(1, (->{
               scope = spawn
