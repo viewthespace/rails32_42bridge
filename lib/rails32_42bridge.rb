@@ -19,6 +19,9 @@ end
 include Rails3242bridge::VersionCheck
 
 if rails4?
+
+  ActionController::RecordIdentifier = ActionView::RecordIdentifier
+
   ActiveRecord::Base.class_eval do
 
     class << self
