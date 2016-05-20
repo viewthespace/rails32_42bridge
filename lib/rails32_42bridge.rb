@@ -26,6 +26,10 @@ if rails4?
 
     class << self
 
+      def scoped
+        all
+      end
+
       def has_many_with_rails3(*args)
         has_many_without_rails3(*convert_options_to_proc(args))
       end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe Post, type: :model do
   specify 'posts can have many comments' do
@@ -36,6 +36,10 @@ RSpec.describe Post, type: :model do
     expect(post.latest_comment).to be_nil
     comment = post.comments.create(value: "Thats a silly thing to post", position: 2, latest: true)
     expect(post.reload.latest_comment).to eq comment
+  end
+
+  specify 'can call scoped on post' do
+    expect(Post.scoped).to be_empty
   end
 
 
